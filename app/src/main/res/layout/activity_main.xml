@@ -6,17 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/bottomNavBarColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/textColor" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_container"
         android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:defaultNavHost="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_toolBar"
         app:navGraph="@navigation/main_nav_graph"
         tools:context=".ui.MainActivity" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_bnv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bottomNavBarColor"
+        app:itemIconTint="@color/bottom_navigation_color_selector"
+        app:itemTextColor="@color/bottom_navigation_color_selector"
+        app:labelVisibilityMode="selected"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_bottom_navigation_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.vk_api.R
 import com.example.vk_api.utils.NetworkObserver
 import com.example.vk_api.utils.auth.AuthRepository
 import com.example.vk_api.utils.auth.AuthStatus
@@ -130,7 +131,7 @@ class AuthFragment : Fragment() {
     }
 
     private fun navigateTo() {
-        findNavController()
+        findNavController().navigate(R.id.action_authFragment_to_homeFragment)
     }
 
     override fun onDestroy() {

@@ -8,18 +8,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primaryColor">#cfd8dc</color>
-    <color name="primaryLightColor">#ffffff</color>
-    <color name="primaryDarkColor">#9ea7aa</color>
-    <color name="secondaryColor">#bcaaa4</color>
-    <color name="secondaryLightColor">#efdcd5</color>
-    <color name="secondaryDarkColor">#594E4A</color>
-    <color name="textColor">#000000</color>
+    <color name="primaryColor">#263238</color>
+    <color name="primaryLightColor">#4f5b62</color>
+    <color name="primaryDarkColor">#000a12</color>
+    <color name="secondaryColor">#3e2723</color>
+    <color name="secondaryLightColor">#6a4f4b</color>
+    <color name="secondaryDarkColor">#1b0000</color>
+    <color name="textColor">#ffffff</color>
     <color name="favouriteColor">#F44336</color>
-    <color name="windowBackgroundColor">#F0F0F0</color>
-    <color name="bottomNavBarColor">#FFFFFF</color>
+    <color name="windowBackgroundColor">#000000</color>
+    <color name="bottomNavBarColor">#0E0E0E</color>
     <color name="selector_default">#BBBBBB</color>
     <color name="selector_pressed">#333333</color>
     <color name="selector_checked">#42A5F5</color>
-    <color name="label_color">#000000</color>
+    <color name="label_color">#4CAF50</color>
 </resources>

@@ -15,5 +15,5 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun provideAuthSubcomponent(): AuthSubcomponent
-
+    fun provideHomeSubcomponent(): HomeSubcomponent
 }
