@@ -1,6 +1,11 @@
 package com.example.vk_api.di.module.singletones
 
 import android.app.Application
+import com.example.data.network.NetworkDataSourceImpl
+import com.example.data.network.RetrofitService
+import com.example.data.repository.DataSourceRepositoryImpl
+import com.example.data.repository.NetworkDataSource
+import com.example.domain.DataSourceRepository
 import com.example.vk_api.utils.NetworkObserver
 import com.example.vk_api.utils.auth.AuthRepository
 import com.example.vk_api.utils.auth.AuthRepositoryImpl
@@ -38,5 +43,19 @@ class AppModule(private val application: Application) {
     fun provideAuthRepository(): AuthRepository {
         return AuthRepositoryImpl(application.getSharedPreferences(VK_ACCOUNT,
             Application.MODE_PRIVATE))
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataSourceRepository(
+        network: NetworkDataSource,
+    ): DataSourceRepository {
+        return DataSourceRepositoryImpl(network)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNetworkDataSource(retrofitService: RetrofitService): NetworkDataSource {
+        return NetworkDataSourceImpl(retrofitService)
     }
 }

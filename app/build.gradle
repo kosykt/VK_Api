@@ -38,6 +38,9 @@ android {
 
 dependencies {
 
+    implementation project(Modules.domain)
+    implementation project(Modules.data)
+
     implementation Dependencies.dagger
     kapt Dependencies.dagger_comp
 

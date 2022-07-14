@@ -1,3 +1,3 @@
 package com.example.vk_api.utils.auth
 
-const val SCOPE = "friends,stats"
+const val SCOPE = "offline"
