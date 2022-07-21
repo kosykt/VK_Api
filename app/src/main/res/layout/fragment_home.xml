@@ -1,14 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.homefragment.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/home_profile_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        tools:text="123456798"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/home_profile_photo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_baseline_place_holder"
+        app:layout_constraintTop_toBottomOf="@id/home_profile_id"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/home_profile_bdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        tools:text="01.01.2000"
+        app:layout_constraintTop_toBottomOf="@id/home_profile_photo"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/home_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="home_profile_id, home_profile_photo, home_profile_bdate"
+        app:barrierDirection="end"/>
+
+    <TextView
+        android:id="@+id/home_profile_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        tools:text="status"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/home_barrier"/>
+
+    <TextView
+        android:id="@+id/home_profile_last_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        tools:text="Last name"
+        app:layout_constraintTop_toBottomOf="@id/home_profile_status"
+        app:layout_constraintStart_toStartOf="@id/home_barrier"/>
+
+    <TextView
+        android:id="@+id/home_profile_first_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        tools:text="First name"
+        app:layout_constraintTop_toBottomOf="@id/home_profile_last_name"
+        app:layout_constraintStart_toStartOf="@id/home_barrier"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

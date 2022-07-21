@@ -2,8 +2,9 @@ package com.example.vk_api.di.module.scopes
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
-import com.example.domain.DataSourceRepository
+import com.example.domain.ProfileDataSourceRepository
 import com.example.domain.GetProfileInfoUseCase
+import com.example.domain.GetProfilePhotoUseCase
 import com.example.vk_api.di.annotation.HomeScope
 import com.example.vk_api.di.annotation.ViewModelKey
 import com.example.vk_api.ui.homefragment.HomeSubcomponentProvider
@@ -22,20 +23,28 @@ interface HomeModule {
     @ViewModelKey(HomeViewModel::class)
     fun bindHomeViewModel(vm: HomeViewModel): ViewModel
 
-    companion object{
+    companion object {
 
         @HomeScope
         @Provides
-        fun provideGetReposUseCase(
-            dataSourceRepository: DataSourceRepository
+        fun provideGetProfileInfoUseCase(
+            dataSourceRepository: ProfileDataSourceRepository,
         ): GetProfileInfoUseCase {
             return GetProfileInfoUseCase(dataSourceRepository)
         }
 
         @HomeScope
         @Provides
+        fun provideGetProfilePhotoUseCase(
+            profileDataSourceRepository: ProfileDataSourceRepository,
+        ): GetProfilePhotoUseCase {
+            return GetProfilePhotoUseCase(profileDataSourceRepository)
+        }
+
+        @HomeScope
+        @Provides
         fun provideHomeSubcomponentProvider(
-            application: Application
+            application: Application,
         ): HomeSubcomponentProvider {
             return (application as HomeSubcomponentProvider)
         }

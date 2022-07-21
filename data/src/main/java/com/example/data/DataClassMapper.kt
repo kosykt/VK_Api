@@ -1,7 +1,9 @@
 package com.example.data
 
 import com.example.data.network.profileinfomodel.ProfileInfoDTO
+import com.example.data.network.profilephotomodel.ProfilePhotoDTO
 import com.example.domain.model.ProfileInfoDomainModel
+import com.example.domain.model.ProfilePhotoDomainModel
 
 fun ProfileInfoDTO.toProfileInfoDomainModel() = ProfileInfoDomainModel(
     id = this.response.id.toString(),
@@ -21,4 +23,9 @@ fun ProfileInfoDTO.toProfileInfoDomainModel() = ProfileInfoDomainModel(
     relationPartnerLastName = this.response.relation_partner.last_name,
     relationPartnerIsClosed = this.response.relation_partner.is_closed,
     relationPartnerCanAccessClosed = this.response.relation_partner.can_access_closed,
+)
+
+fun ProfilePhotoDTO.toProfilePhotoDomainModel() = ProfilePhotoDomainModel(
+    id = this.response.items.last().id.toString(),
+    url = this.response.items.last().sizes.last().url
 )
