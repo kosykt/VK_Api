@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.vk_api.R
 import com.example.vk_api.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnDataPass {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -51,5 +51,9 @@ class MainActivity : AppCompatActivity() {
         val bottomNavView = binding.mainBnv
         NavigationUI.setupWithNavController(bottomNavView, navController)
         bottomNavView.setupWithNavController(navController)
+    }
+
+    override fun menuTitle(data: String) {
+        supportActionBar?.title = data
     }
 }

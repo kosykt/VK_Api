@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bottomNavBarColor"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/edit_top_guide_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/M_margin" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/edit_bottom_guide_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/M_margin" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/edit_start_guide_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/M_margin" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/edit_end_guide_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/M_margin" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_last_name_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/bottomNavBarColor"
+        app:boxStrokeColor="@color/textColor"
+        app:endIconCheckable="true"
+        app:endIconDrawable="@drawable/ic_baseline_save_24"
+        app:endIconMode="custom"
+        app:layout_constraintStart_toStartOf="@id/edit_start_guide_line"
+        app:layout_constraintTop_toTopOf="@id/edit_top_guide_line">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_last_name_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/M_text_size" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_first_name_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/bottomNavBarColor"
+        app:boxStrokeColor="@color/textColor"
+        app:endIconCheckable="true"
+        app:endIconDrawable="@drawable/ic_baseline_save_24"
+        app:endIconMode="custom"
+        app:layout_constraintStart_toStartOf="@id/edit_start_guide_line"
+        app:layout_constraintTop_toBottomOf="@id/edit_last_name_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_first_name_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/M_text_size" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_status_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/bottomNavBarColor"
+        app:boxStrokeColor="@color/textColor"
+        app:endIconCheckable="true"
+        app:endIconDrawable="@drawable/ic_baseline_save_24"
+        app:endIconMode="custom"
+        app:layout_constraintBottom_toTopOf="@id/edit_bottom_guide_line"
+        app:layout_constraintStart_toStartOf="@id/edit_start_guide_line"
+        app:layout_constraintTop_toBottomOf="@id/edit_first_name_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_status_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/M_text_size" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

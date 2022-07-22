@@ -18,11 +18,11 @@ fun ProfileInfoDTO.toProfileInfoDomainModel() = ProfileInfoDomainModel(
     relation = this.response.relation.toString(),
     sex = this.response.sex.toString(),
     status = this.response.status,
-    relationPartnerId = this.response.relation_partner.id.toString(),
-    relationPartnerFirstName = this.response.relation_partner.first_name,
-    relationPartnerLastName = this.response.relation_partner.last_name,
-    relationPartnerIsClosed = this.response.relation_partner.is_closed,
-    relationPartnerCanAccessClosed = this.response.relation_partner.can_access_closed,
+    relationPartnerId = this.response.relation_partner?.id.toString(),
+    relationPartnerFirstName = this.response.relation_partner?.first_name.toString(),
+    relationPartnerLastName = this.response.relation_partner?.last_name.toString(),
+    relationPartnerIsClosed = this.response.relation_partner?.is_closed ?: false,
+    relationPartnerCanAccessClosed = this.response.relation_partner?.can_access_closed ?: false,
 )
 
 fun ProfilePhotoDTO.toProfilePhotoDomainModel() = ProfilePhotoDomainModel(

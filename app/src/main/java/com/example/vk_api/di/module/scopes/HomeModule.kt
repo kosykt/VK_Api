@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.domain.ProfileDataSourceRepository
 import com.example.domain.GetProfileInfoUseCase
 import com.example.domain.GetProfilePhotoUseCase
+import com.example.domain.PostProfileInfoStatusUseCase
 import com.example.vk_api.di.annotation.HomeScope
 import com.example.vk_api.di.annotation.ViewModelKey
 import com.example.vk_api.ui.homefragment.HomeSubcomponentProvider
@@ -39,6 +40,14 @@ interface HomeModule {
             profileDataSourceRepository: ProfileDataSourceRepository,
         ): GetProfilePhotoUseCase {
             return GetProfilePhotoUseCase(profileDataSourceRepository)
+        }
+
+        @HomeScope
+        @Provides
+        fun providePostProfileInfoStatusUseCase(
+            profileDataSourceRepository: ProfileDataSourceRepository,
+        ): PostProfileInfoStatusUseCase {
+            return PostProfileInfoStatusUseCase(profileDataSourceRepository)
         }
 
         @HomeScope

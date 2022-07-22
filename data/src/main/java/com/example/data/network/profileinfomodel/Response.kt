@@ -11,7 +11,7 @@ data class Response(
     val last_name: String,
     val phone: String,
     val relation: Int,
-    val relation_partner: RelationPartner,
+    val relation_partner: RelationPartner?,
     val sex: Int,
     val status: String
 )

@@ -2,8 +2,8 @@ package com.example.domain
 
 import com.example.domain.model.UseCaseResponse
 
-class GetProfileInfoUseCase(
+class PostProfileInfoStatusUseCase(
     private val repository: ProfileDataSourceRepository,
 ) {
-    suspend fun execute(): UseCaseResponse = repository.getProfileInfo()
+    suspend fun execute(status: String): UseCaseResponse = repository.postProfileInfoStatus(status)
 }

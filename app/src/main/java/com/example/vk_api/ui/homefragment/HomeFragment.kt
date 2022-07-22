@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
@@ -11,11 +12,13 @@ import androidx.lifecycle.lifecycleScope
 import com.example.domain.model.ProfileInfoDomainModel
 import com.example.domain.model.ProfilePhotoDomainModel
 import com.example.vk_api.databinding.FragmentHomeBinding
+import com.example.vk_api.ui.OnDataPass
 import com.example.vk_api.ui.base.BaseFragment
 import com.example.vk_api.utils.AppState
 import com.example.vk_api.utils.NetworkObserver
 import com.example.vk_api.utils.ViewModelFactory
 import com.example.vk_api.utils.imageloader.AppImageLoader
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
@@ -61,14 +64,106 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launchWhenCreated {
-            networkObserver.networkIsAvailable()
-                .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
+        getProfileInfo()
+        getProfilePhoto()
+        initBottomSheet()
+        initLastNameEditor()
+        initFirstNameEditor()
+        initStatusEditor()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        observeProfilePhoto()
+        observeProfileInfo()
+        initEndIconStatusListener()
+    }
+
+
+    private fun initEndIconStatusListener() {
+        binding.bottomSheetProfileInfoEdit.editStatusLayout.setEndIconOnClickListener {
+            val status = binding.bottomSheetProfileInfoEdit.editStatusEditText.text.toString()
+            postStatus(status)
+        }
+    }
+
+    private fun postStatus(status: String) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.postProfileStatus(networkObserver.networkIsAvailable().value, status)
+        }
+    }
+
+
+    private fun initStatusEditor() {
+        with(binding.bottomSheetProfileInfoEdit) {
+            editStatusLayout.isEndIconVisible = false
+            editStatusEditText.addTextChangedListener {
+                editStatusLayout.isEndIconVisible = !it.isNullOrBlank()
+            }
+            editStatusLayout.setEndIconOnClickListener {
+                Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun initFirstNameEditor() {
+        with(binding.bottomSheetProfileInfoEdit) {
+            editFirstNameLayout.isEndIconVisible = false
+            editFirstNameEditText.addTextChangedListener {
+                editFirstNameLayout.isEndIconVisible = !it.isNullOrBlank()
+            }
+            editFirstNameLayout.setEndIconOnClickListener {
+                Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun initLastNameEditor() {
+        with(binding.bottomSheetProfileInfoEdit) {
+            editLastNameLayout.isEndIconVisible = false
+            editLastNameEditText.addTextChangedListener {
+                editLastNameLayout.isEndIconVisible = !it.isNullOrBlank()
+            }
+            editLastNameLayout.setEndIconOnClickListener {
+                Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun observeProfileInfo() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.stateFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .distinctUntilChanged()
                 .collectLatest {
-                    viewModel.getProfileInfo(it)
+                    renderInfo(it)
                 }
         }
+    }
+
+    private fun observeProfilePhoto() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.profilePhoto
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .distinctUntilChanged()
+                .collectLatest {
+                    renderPhoto(it)
+                }
+        }
+    }
+
+    private fun initBottomSheet() {
+        val bottomSheet = BottomSheetBehavior.from(binding.bottomSheetProfileInfoEdit.root)
+        binding.homeEditButton.setOnClickListener {
+            if (bottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+    }
+
+    private fun getProfilePhoto() {
         lifecycleScope.launchWhenCreated {
             networkObserver.networkIsAvailable()
                 .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
@@ -79,22 +174,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        lifecycleScope.launchWhenStarted {
-            viewModel.profilePhoto
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+    private fun getProfileInfo() {
+        lifecycleScope.launchWhenCreated {
+            networkObserver.networkIsAvailable()
+                .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
                 .distinctUntilChanged()
                 .collectLatest {
-                    renderPhoto(it)
-                }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.stateFlow
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .distinctUntilChanged()
-                .collectLatest {
-                    renderInfo(it)
+                    viewModel.getProfileInfo(it)
                 }
         }
     }
@@ -106,45 +192,44 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 val data = appState.data as ProfilePhotoDomainModel
                 imageLoader.loadInto(data.url, binding.homeProfilePhoto)
             }
-            is AppState.Loading -> {
-                Toast.makeText(context, "LOADING", Toast.LENGTH_SHORT).show()
-            }
-            is AppState.Error -> {
-                Toast.makeText(context, appState.error, Toast.LENGTH_SHORT).show()
-            }
+            else -> {}
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun renderInfo(appState: AppState) {
+        val dataPasser = requireActivity() as OnDataPass
         clearView()
         when (appState) {
             is AppState.Success<*> -> {
                 val data = appState.data as ProfileInfoDomainModel
-                with(binding){
-                    homeProfileId.text = data.id
+                dataPasser.menuTitle("id${data.id}")
+                with(binding) {
                     homeProfileStatus.text = data.status
-                    homeProfileBdate.text = data.bDate
                     homeProfileFirstName.text = data.firstName
                     homeProfileLastName.text = data.lastName
+                    bottomSheetProfileInfoEdit.editLastNameEditText.hint = data.lastName
+                    bottomSheetProfileInfoEdit.editFirstNameEditText.hint = data.firstName
+                    bottomSheetProfileInfoEdit.editStatusEditText.hint = data.status
                 }
             }
             is AppState.Loading -> {
-                Toast.makeText(context, "LOADING", Toast.LENGTH_SHORT).show()
+                dataPasser.menuTitle("LOADING")
             }
             is AppState.Error -> {
-                Toast.makeText(context, appState.error, Toast.LENGTH_SHORT).show()
+                dataPasser.menuTitle("ERROR")
             }
         }
     }
 
     private fun clearView() {
-        with(binding){
-            homeProfileId.text = ""
+        with(binding) {
             homeProfileStatus.text = ""
-            homeProfileBdate.text = ""
             homeProfileFirstName.text = ""
             homeProfileLastName.text = ""
+            bottomSheetProfileInfoEdit.editLastNameEditText.hint = ""
+            bottomSheetProfileInfoEdit.editFirstNameEditText.hint = ""
+            bottomSheetProfileInfoEdit.editStatusEditText.hint = ""
         }
     }
 }
