@@ -1,6 +1,5 @@
 package com.example.data.repository
 
-import com.example.data.network.saveprofileinfomodel.SaveProfileInfoDTO
 import com.example.data.toProfileInfoDomainModel
 import com.example.data.toProfilePhotoDomainModel
 import com.example.domain.ProfileDataSourceRepository
@@ -54,10 +53,14 @@ class ProfileDataSourceRepositoryImpl(
             val response = networkDataSource.postProfileInfoStatus(status)
             return when {
                 response.isSuccessful && response.body() != null -> {
-                    if (response.body()!!.response.changed == 1) {
+                    if (response.body()?.response?.changed == 1) {
                         UseCaseResponse.Success(SaveProfileInfoDomainModel(""))
+                    } else if (response.body()?.response?.changed == 0 && response.body()?.response?.name_request == null) {
+                        UseCaseResponse.Success(SaveProfileInfoDomainModel(""))
+                    }else if (response.body()?.response?.changed == 0 && response.body()?.response?.name_request != null){
+                        UseCaseResponse.Error(response.body()?.response?.name_request?.lang.orEmpty())
                     } else {
-                        UseCaseResponse.Error(response.body()!!.response.name_request?.lang.toString())
+                        UseCaseResponse.Error("Empty error message")
                     }
                 }
                 response.isSuccessful && response.body() == null -> {
@@ -67,16 +70,62 @@ class ProfileDataSourceRepositoryImpl(
                     UseCaseResponse.Error("something wrong")
                 }
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return UseCaseResponse.Error(e.message.toString())
         }
     }
 
     override suspend fun postProfileInfoFirstName(firstName: String): UseCaseResponse {
-        TODO("Not yet implemented")
+        try {
+            val response = networkDataSource.postProfileInfoFirstName(firstName)
+            return when {
+                response.isSuccessful && response.body() != null -> {
+                    if (response.body()?.response?.changed == 1) {
+                        UseCaseResponse.Success(SaveProfileInfoDomainModel(""))
+                    } else if (response.body()?.response?.changed == 0 && response.body()?.response?.name_request == null) {
+                        UseCaseResponse.Success(SaveProfileInfoDomainModel(""))
+                    }else if (response.body()?.response?.changed == 0 && response.body()?.response?.name_request != null){
+                        UseCaseResponse.Error(response.body()?.response?.name_request?.lang.orEmpty())
+                    } else {
+                        UseCaseResponse.Error("Empty error message")
+                    }
+                }
+                response.isSuccessful && response.body() == null -> {
+                    UseCaseResponse.Error("response body is null")
+                }
+                else -> {
+                    UseCaseResponse.Error("something wrong")
+                }
+            }
+        } catch (e: Exception) {
+            return UseCaseResponse.Error(e.message.toString())
+        }
     }
 
     override suspend fun postProfileInfoLastName(lastName: String): UseCaseResponse {
-        TODO("Not yet implemented")
+        try {
+            val response = networkDataSource.postProfileInfoLastName(lastName)
+            return when {
+                response.isSuccessful && response.body() != null -> {
+                    if (response.body()?.response?.changed == 1) {
+                        UseCaseResponse.Success(SaveProfileInfoDomainModel(""))
+                    } else if (response.body()?.response?.changed == 0 && response.body()?.response?.name_request == null) {
+                        UseCaseResponse.Success(SaveProfileInfoDomainModel(""))
+                    }else if (response.body()?.response?.changed == 0 && response.body()?.response?.name_request != null){
+                        UseCaseResponse.Error(response.body()?.response?.name_request?.lang.orEmpty())
+                    } else {
+                        UseCaseResponse.Error("Empty error message")
+                    }
+                }
+                response.isSuccessful && response.body() == null -> {
+                    UseCaseResponse.Error("response body is null")
+                }
+                else -> {
+                    UseCaseResponse.Error("something wrong")
+                }
+            }
+        } catch (e: Exception) {
+            return UseCaseResponse.Error(e.message.toString())
+        }
     }
 }

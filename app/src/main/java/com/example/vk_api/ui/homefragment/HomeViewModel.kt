@@ -1,8 +1,6 @@
 package com.example.vk_api.ui.homefragment
 
-import com.example.domain.GetProfileInfoUseCase
-import com.example.domain.GetProfilePhotoUseCase
-import com.example.domain.PostProfileInfoStatusUseCase
+import com.example.domain.*
 import com.example.domain.model.SaveProfileInfoDomainModel
 import com.example.domain.model.UseCaseResponse
 import com.example.vk_api.ui.base.BaseViewModel
@@ -18,24 +16,58 @@ class HomeViewModel @Inject constructor(
     private val getProfileInfoUseCase: GetProfileInfoUseCase,
     private val getProfilePhotoUseCase: GetProfilePhotoUseCase,
     private val postProfileInfoStatusUseCase: PostProfileInfoStatusUseCase,
+    private val postProfileInfoFirstNameUseCase: PostProfileInfoFirstNameUseCase,
+    private val postProfileInfoLastNameUseCase: PostProfileInfoLastNameUseCase,
 ) : BaseViewModel() {
 
     private var _profilePhoto = MutableStateFlow<AppState>(AppState.Loading)
     val profilePhoto: StateFlow<AppState> = _profilePhoto.asStateFlow()
 
-    suspend fun postProfileStatus(networkIsAvailable: Boolean, status: String): String {
+    suspend fun postProfileStatus(networkIsAvailable: Boolean, status: String): AppState {
         return try {
             val response = postProfileInfoStatusUseCase.execute(status)
             when (response) {
                 is UseCaseResponse.Error -> {
-                    response.message
+                    AppState.Error(response.message)
                 }
                 is UseCaseResponse.Success<*> -> {
-                    return (response.data as SaveProfileInfoDomainModel).response
+                    AppState.Success((response.data as SaveProfileInfoDomainModel).response)
                 }
             }
         } catch (e: Exception) {
-            return e.message.toString()
+            AppState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun postProfileFirstName(networkIsAvailable: Boolean, firstName: String): AppState {
+        return try {
+            val response = postProfileInfoFirstNameUseCase.execute(firstName)
+            when (response) {
+                is UseCaseResponse.Error -> {
+                    AppState.Error(response.message)
+                }
+                is UseCaseResponse.Success<*> -> {
+                    AppState.Success((response.data as SaveProfileInfoDomainModel).response)
+                }
+            }
+        } catch (e: Exception) {
+            AppState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun postProfileLastName(networkIsAvailable: Boolean, lastName: String): AppState {
+        return try {
+            val response = postProfileInfoLastNameUseCase.execute(lastName)
+            when (response) {
+                is UseCaseResponse.Error -> {
+                    AppState.Error(response.message)
+                }
+                is UseCaseResponse.Success<*> -> {
+                    AppState.Success((response.data as SaveProfileInfoDomainModel).response)
+                }
+            }
+        } catch (e: Exception) {
+            AppState.Error(e.message.toString())
         }
     }
 

@@ -3,7 +3,6 @@ package com.example.vk_api.ui.homefragment
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +18,7 @@ import com.example.vk_api.utils.NetworkObserver
 import com.example.vk_api.utils.ViewModelFactory
 import com.example.vk_api.utils.imageloader.AppImageLoader
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
@@ -77,6 +77,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         observeProfilePhoto()
         observeProfileInfo()
         initEndIconStatusListener()
+        initEndIconFirstNameListener()
+        initEndIconLastNameListener()
+    }
+
+    private fun initEndIconFirstNameListener() {
+        binding.bottomSheetProfileInfoEdit.editFirstNameLayout.setEndIconOnClickListener {
+            val firstName = binding.bottomSheetProfileInfoEdit.editFirstNameEditText.text.toString()
+            postFirstName(firstName)
+        }
+    }
+
+    private fun postFirstName(firstName: String) {
+        lifecycleScope.launchWhenStarted {
+            val response: AppState = viewModel
+                .postProfileFirstName(networkObserver.networkIsAvailable().value, firstName)
+            renderPostResponse(response, binding.bottomSheetProfileInfoEdit.editFirstNameLayout)
+        }
+    }
+
+    private fun initEndIconLastNameListener() {
+        binding.bottomSheetProfileInfoEdit.editLastNameLayout.setEndIconOnClickListener {
+            val lastName = binding.bottomSheetProfileInfoEdit.editLastNameEditText.text.toString()
+            postLastName(lastName)
+        }
+    }
+
+    private fun postLastName(lastName: String) {
+        lifecycleScope.launchWhenStarted {
+            val response: AppState = viewModel
+                .postProfileLastName(networkObserver.networkIsAvailable().value, lastName)
+            renderPostResponse(response, binding.bottomSheetProfileInfoEdit.editLastNameLayout)
+        }
     }
 
 
@@ -89,7 +121,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private fun postStatus(status: String) {
         lifecycleScope.launchWhenStarted {
-            viewModel.postProfileStatus(networkObserver.networkIsAvailable().value, status)
+            val response: AppState = viewModel
+                .postProfileStatus(networkObserver.networkIsAvailable().value, status)
+            renderPostResponse(response, binding.bottomSheetProfileInfoEdit.editStatusLayout)
+        }
+    }
+
+    private fun renderPostResponse(response: AppState, editStatusLayout: TextInputLayout) {
+        when (response) {
+            is AppState.Error -> {
+                editStatusLayout.isErrorEnabled = true
+                editStatusLayout.error = response.error
+            }
+            is AppState.Loading -> {
+                editStatusLayout.helperText = "Сhange handling"
+            }
+            is AppState.Success<*> -> {
+                editStatusLayout.helperText = "Success"
+                viewModel.getProfileInfo(networkObserver.networkIsAvailable().value)
+            }
         }
     }
 
@@ -99,9 +149,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             editStatusLayout.isEndIconVisible = false
             editStatusEditText.addTextChangedListener {
                 editStatusLayout.isEndIconVisible = !it.isNullOrBlank()
-            }
-            editStatusLayout.setEndIconOnClickListener {
-                Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+                editStatusLayout.isErrorEnabled = false
+                editStatusLayout.helperText = ""
             }
         }
     }
@@ -111,9 +160,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             editFirstNameLayout.isEndIconVisible = false
             editFirstNameEditText.addTextChangedListener {
                 editFirstNameLayout.isEndIconVisible = !it.isNullOrBlank()
-            }
-            editFirstNameLayout.setEndIconOnClickListener {
-                Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+                editFirstNameLayout.isErrorEnabled = false
+                editFirstNameLayout.helperText = ""
             }
         }
     }
@@ -123,9 +171,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             editLastNameLayout.isEndIconVisible = false
             editLastNameEditText.addTextChangedListener {
                 editLastNameLayout.isEndIconVisible = !it.isNullOrBlank()
-            }
-            editLastNameLayout.setEndIconOnClickListener {
-                Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+                editLastNameLayout.isErrorEnabled = false
+                editLastNameLayout.helperText = ""
             }
         }
     }
@@ -164,25 +211,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun getProfilePhoto() {
-        lifecycleScope.launchWhenCreated {
-            networkObserver.networkIsAvailable()
-                .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-                .distinctUntilChanged()
-                .collectLatest {
-                    viewModel.getProfilePhoto(it)
-                }
-        }
+        viewModel.getProfilePhoto(networkObserver.networkIsAvailable().value)
     }
 
     private fun getProfileInfo() {
-        lifecycleScope.launchWhenCreated {
-            networkObserver.networkIsAvailable()
-                .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-                .distinctUntilChanged()
-                .collectLatest {
-                    viewModel.getProfileInfo(it)
-                }
-        }
+        viewModel.getProfileInfo(networkObserver.networkIsAvailable().value)
     }
 
     @Suppress("UNCHECKED_CAST")
