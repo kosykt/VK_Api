@@ -24,87 +24,94 @@ class HomeViewModel @Inject constructor(
     val profilePhoto: StateFlow<AppState> = _profilePhoto.asStateFlow()
 
     suspend fun postProfileStatus(networkIsAvailable: Boolean, status: String): AppState {
-        return try {
-            val response = postProfileInfoStatusUseCase.execute(status)
-            when (response) {
-                is UseCaseResponse.Error -> {
-                    AppState.Error(response.message)
-                }
-                is UseCaseResponse.Success<*> -> {
-                    AppState.Success((response.data as SaveProfileInfoDomainModel).response)
-                }
+        return if (networkIsAvailable) {
+            try {
+                postProfileResponseHandling(postProfileInfoStatusUseCase.execute(status))
+            } catch (e: Exception) {
+                AppState.Error(e.message.toString())
             }
-        } catch (e: Exception) {
-            AppState.Error(e.message.toString())
+        }else{
+            AppState.Error("Network is not available")
         }
     }
 
     suspend fun postProfileFirstName(networkIsAvailable: Boolean, firstName: String): AppState {
-        return try {
-            val response = postProfileInfoFirstNameUseCase.execute(firstName)
-            when (response) {
-                is UseCaseResponse.Error -> {
-                    AppState.Error(response.message)
-                }
-                is UseCaseResponse.Success<*> -> {
-                    AppState.Success((response.data as SaveProfileInfoDomainModel).response)
-                }
+        return if (networkIsAvailable) {
+            try {
+                postProfileResponseHandling(postProfileInfoFirstNameUseCase.execute(firstName))
+            } catch (e: Exception) {
+                AppState.Error(e.message.toString())
             }
-        } catch (e: Exception) {
-            AppState.Error(e.message.toString())
+        }else{
+            AppState.Error("Network is not available")
         }
     }
 
     suspend fun postProfileLastName(networkIsAvailable: Boolean, lastName: String): AppState {
-        return try {
-            val response = postProfileInfoLastNameUseCase.execute(lastName)
-            when (response) {
-                is UseCaseResponse.Error -> {
-                    AppState.Error(response.message)
-                }
-                is UseCaseResponse.Success<*> -> {
-                    AppState.Success((response.data as SaveProfileInfoDomainModel).response)
-                }
+        return if (networkIsAvailable) {
+            try {
+                postProfileResponseHandling(postProfileInfoLastNameUseCase.execute(lastName))
+            } catch (e: Exception) {
+                AppState.Error(e.message.toString())
             }
-        } catch (e: Exception) {
-            AppState.Error(e.message.toString())
+        }else{
+            AppState.Error("Network is not available")
         }
     }
 
     fun getProfilePhoto(networkIsAvailable: Boolean) {
-        baseViewModelScope.launch {
-            _profilePhoto.value = AppState.Loading
-            try {
-                val response = getProfilePhotoUseCase.execute()
-                when (response) {
-                    is UseCaseResponse.Error -> {
-                        _profilePhoto.value = AppState.Error(response.message)
+        if (networkIsAvailable) {
+            baseViewModelScope.launch {
+                _profilePhoto.value = AppState.Loading
+                try {
+                    val response = getProfilePhotoUseCase.execute()
+                    when (response) {
+                        is UseCaseResponse.Error -> {
+                            _profilePhoto.value = AppState.Error(response.message)
+                        }
+                        is UseCaseResponse.Success<*> -> {
+                            _profilePhoto.value = AppState.Success(response.data)
+                        }
                     }
-                    is UseCaseResponse.Success<*> -> {
-                        _profilePhoto.value = AppState.Success(response.data)
-                    }
+                } catch (e: Exception) {
+                    _profilePhoto.value = AppState.Error(e.message.toString())
                 }
-            } catch (e: Exception) {
-                _profilePhoto.value = AppState.Error(e.message.toString())
             }
+        }else{
+            _profilePhoto.value = AppState.Error("Network is not available")
         }
     }
 
     fun getProfileInfo(networkIsAvailable: Boolean) {
-        baseViewModelScope.launch {
-            mutableStateFlow.value = AppState.Loading
-            try {
-                val response = getProfileInfoUseCase.execute()
-                when (response) {
-                    is UseCaseResponse.Error -> {
-                        mutableStateFlow.value = AppState.Error(response.message)
+        if (networkIsAvailable) {
+            baseViewModelScope.launch {
+                mutableStateFlow.value = AppState.Loading
+                try {
+                    val response = getProfileInfoUseCase.execute()
+                    when (response) {
+                        is UseCaseResponse.Error -> {
+                            mutableStateFlow.value = AppState.Error(response.message)
+                        }
+                        is UseCaseResponse.Success<*> -> {
+                            mutableStateFlow.value = AppState.Success(response.data)
+                        }
                     }
-                    is UseCaseResponse.Success<*> -> {
-                        mutableStateFlow.value = AppState.Success(response.data)
-                    }
+                } catch (e: Exception) {
+                    mutableStateFlow.value = AppState.Error(e.message.toString())
                 }
-            } catch (e: Exception) {
-                mutableStateFlow.value = AppState.Error(e.message.toString())
+            }
+        }else{
+            mutableStateFlow.value = AppState.Error("Network is not available")
+        }
+    }
+
+    private fun postProfileResponseHandling(response: UseCaseResponse): AppState {
+        return when (response) {
+            is UseCaseResponse.Error -> {
+                AppState.Error(response.message)
+            }
+            is UseCaseResponse.Success<*> -> {
+                AppState.Success((response.data as SaveProfileInfoDomainModel).response)
             }
         }
     }

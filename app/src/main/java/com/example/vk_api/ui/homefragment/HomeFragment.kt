@@ -18,6 +18,7 @@ import com.example.vk_api.utils.NetworkObserver
 import com.example.vk_api.utils.ViewModelFactory
 import com.example.vk_api.utils.imageloader.AppImageLoader
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -67,9 +68,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         getProfileInfo()
         getProfilePhoto()
         initBottomSheet()
-        initLastNameEditor()
-        initFirstNameEditor()
-        initStatusEditor()
+        initProfileInfoEditorBehaviorHandler(
+            layout = binding.bottomSheetProfileInfoEdit.editStatusLayout,
+            ediText = binding.bottomSheetProfileInfoEdit.editStatusEditText,
+        )
+        initProfileInfoEditorBehaviorHandler(
+            layout = binding.bottomSheetProfileInfoEdit.editFirstNameLayout,
+            ediText = binding.bottomSheetProfileInfoEdit.editFirstNameEditText,
+        )
+        initProfileInfoEditorBehaviorHandler(
+            layout = binding.bottomSheetProfileInfoEdit.editLastNameLayout,
+            ediText = binding.bottomSheetProfileInfoEdit.editLastNameEditText,
+        )
     }
 
     override fun onStart() {
@@ -144,36 +154,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
 
-    private fun initStatusEditor() {
-        with(binding.bottomSheetProfileInfoEdit) {
-            editStatusLayout.isEndIconVisible = false
-            editStatusEditText.addTextChangedListener {
-                editStatusLayout.isEndIconVisible = !it.isNullOrBlank()
-                editStatusLayout.isErrorEnabled = false
-                editStatusLayout.helperText = ""
-            }
-        }
-    }
-
-    private fun initFirstNameEditor() {
-        with(binding.bottomSheetProfileInfoEdit) {
-            editFirstNameLayout.isEndIconVisible = false
-            editFirstNameEditText.addTextChangedListener {
-                editFirstNameLayout.isEndIconVisible = !it.isNullOrBlank()
-                editFirstNameLayout.isErrorEnabled = false
-                editFirstNameLayout.helperText = ""
-            }
-        }
-    }
-
-    private fun initLastNameEditor() {
-        with(binding.bottomSheetProfileInfoEdit) {
-            editLastNameLayout.isEndIconVisible = false
-            editLastNameEditText.addTextChangedListener {
-                editLastNameLayout.isEndIconVisible = !it.isNullOrBlank()
-                editLastNameLayout.isErrorEnabled = false
-                editLastNameLayout.helperText = ""
-            }
+    private fun initProfileInfoEditorBehaviorHandler(
+        layout: TextInputLayout,
+        ediText: TextInputEditText
+    ) {
+        layout.isEndIconVisible = false
+        ediText.addTextChangedListener {
+            layout.isEndIconVisible = !it.isNullOrBlank()
+            layout.isErrorEnabled = false
+            layout.helperText = ""
         }
     }
 
